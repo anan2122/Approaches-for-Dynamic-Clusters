@@ -1,0 +1,53 @@
+{
+  "animation_interval": 2,
+  "metrics": [
+    "Euclidean",
+    "Manhattan",
+    "Speed-based",
+    "Heading-based",
+    "Combination"
+  ],
+  "algorithms": [
+    {
+      "name": "DBSCAN",
+      "parameters": [
+        {
+          "name": "eps",
+          "type": "float",
+          "default": 0.5
+        },
+        {
+          "name": "min_samples",
+          "type": "int",
+          "default": 5
+        }
+      ]
+    },
+    {
+  "name": "Ant Colony Stream Clustering",
+  "parameters": [
+    {"name": "epsilon", "type": "float", "default": 2.0},
+    {"name": "nComp", "type": "int", "default": 5},
+    {"name": "sleepMax", "type": "int", "default": 10}
+       ]
+    },
+    {
+      "name": "AnanyaBabish",
+      "parameters": [{
+          "name": "p1",
+          "type": "float",
+          "default": 0.5
+        },
+        {
+          "name": "p2",
+          "type": "int",
+          "default": 5
+        },
+        {
+          "name": "p3",
+          "type": "string",
+          "default": "hello"
+        }]
+    }
+  ]
+}
