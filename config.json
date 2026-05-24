@@ -32,22 +32,34 @@
        ]
     },
     {
-      "name": "AnanyaBabish",
-      "parameters": [{
-          "name": "p1",
+      "name": "DenStream",
+      "parameters": [
+        {
+          "name": "lambda",
+          "type": "float",
+          "default": 0.01
+        },
+        {
+          "name": "epsilon",
           "type": "float",
           "default": 0.5
         },
         {
-          "name": "p2",
-          "type": "int",
-          "default": 5
+          "name": "beta",
+          "type": "float",
+          "default": 0.2
         },
         {
-          "name": "p3",
-          "type": "string",
-          "default": "hello"
-        }]
+          "name": "mu",
+          "type": "float",
+          "default": 5.0
+        },
+        {
+          "name": "tp",
+          "type": "int",
+          "default": 20
+        }
+      ]
     }
   ]
 }

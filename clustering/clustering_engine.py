@@ -5,6 +5,7 @@ from typing import Any, Dict, Tuple
 import numpy as np
 
 from .acsc_clustering import ACSCClustering
+from .denstream_clustering import DenStreamEngine
 from .clustering_utils import (
     ClusteringResult,
     build_stats,
@@ -22,6 +23,7 @@ class ClusteringEngine:
 
     ALGO_DBSCAN = "DBSCAN"
     ALGO_ACSC = "Ant Colony Stream Clustering"
+    ALGO_DENSTREAM = "DenStream"
     ALGO_INCREMENTAL_DYNAMIC = "Incremental Dynamic Clustering"
     ALGO_3D_NEIGHBOURHOOD = "3D Neighbourhood Clustering"
 
@@ -33,6 +35,8 @@ class ClusteringEngine:
 
     def __init__(self) -> None:
         self._previous_timestamp_state: Dict[str, Tuple[np.ndarray, np.ndarray]] = {}
+        self._denstream_engine: DenStreamEngine | None = None
+        self._denstream_signature: tuple[float, float, float, float, int] | None = None
 
     def run_algorithm(
         self,
@@ -72,6 +76,37 @@ class ClusteringEngine:
                 epsilon=epsilon,
                 n_comp=n_comp,
                 sleep_max=sleep_max,
+            )
+        elif algorithm_name == self.ALGO_DENSTREAM:
+            decay_lambda = coerce_float(effective_params.get("lambda"), default=0.01)
+            epsilon = coerce_float(effective_params.get("epsilon"), default=0.5)
+            beta = coerce_float(effective_params.get("beta"), default=0.2)
+            mu = coerce_float(effective_params.get("mu"), default=5.0)
+            tp = coerce_int(effective_params.get("tp"), default=20)
+
+            signature = (
+                float(decay_lambda),
+                float(epsilon),
+                float(beta),
+                float(mu),
+                int(tp),
+            )
+            if self._denstream_engine is None or self._denstream_signature != signature:
+                self._denstream_engine = DenStreamEngine(
+                    decay_lambda=decay_lambda,
+                    epsilon=epsilon,
+                    beta=beta,
+                    mu=mu,
+                    tp=tp,
+                )
+                self._denstream_signature = signature
+
+            labels = self._denstream_engine.process_points(points)
+            print(
+                "[DEBUG] Running DenStream with "
+                f"lambda={decay_lambda}, epsilon={epsilon}, beta={beta}, mu={mu}, tp={tp}, "
+                f"p_clusters={len(self._denstream_engine.potential_microclusters)}, "
+                f"o_clusters={len(self._denstream_engine.outlier_microclusters)}"
             )
         else:
             labels = placeholder_labels(points)
