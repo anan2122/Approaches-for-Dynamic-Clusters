@@ -1,12 +1,15 @@
-# Approaches-for-Dynamic-Clusters
-Evaluation of approaches for identification of dynamic clusters.
-This project implements ACSC and DBSCAN for clustering dynamic 3D streaming data.
+# Evaluation of Approaches for Identification of Dynamic Clusters
+## Overview
+This project evaluates multiple clustering approaches for identifying dynamic clusters in continuously arriving 3D spatial data streams. The system compares DBSCAN, ACSC (Ant Colony Stream Clustering), and DenStream-based stream clustering techniques using metrics such as cluster formation, outlier detection, cluster stability, and execution time.
 
 ## Features
 - Dynamic stream clustering
 - 3D point visualization
 - ACSC implementation using micro-clusters
-- DBSCAN comparison
+- DenStream implementation with fading and pruning
+- DBSCAN baseline comparison
+- Cluster evolution tracking
+- Performance evaluation across timestamps
 - Outlier detection
 - Per-timestamp execution time measurement
 - Synthetic dataset generation
@@ -39,6 +42,17 @@ DBSCAN groups points based on density using:
 - epsilon (eps)
 - minimum samples (min_samples)
 
+### DenStream
+
+The DenStream-inspired implementation:
+
+1. Maintains Potential Micro-Clusters (PMC)
+2. Maintains Outlier Micro-Clusters (OMC)
+3. Applies fading functions to old data
+4. Promotes dense outlier clusters
+5. Prunes weak clusters
+6. Supports evolving data streams
+
 ---
 
 ## ACSC Formulae
@@ -49,6 +63,53 @@ Center = LS / N
 ### Radius
 r = sqrt(SS/N - (LS/N)^2)
 
+### DenStream Fading Function
+
+f(t) = 2^(-λt)
+
+where:
+
+- λ = decay factor
+- t = elapsed time
+
+The fading function reduces the influence of older data points over time.
+
+---
+
+## System Architecture
+
+```text
+Streaming Data
+      │
+      ▼
+Data Generator
+      │
+      ▼
+Clustering Engine
+ ├── DBSCAN
+ ├── ACSC
+ └── DenStream
+      │
+      ▼
+Performance Evaluation
+      │
+      ▼
+PyQt Visualization
+```
+
+---
+## Experimental Evaluation
+
+The algorithms were evaluated on synthetic 3D streaming datasets across 100 timestamps.
+
+Evaluation metrics included:
+
+- Cluster Formation
+- Outlier Detection
+- Cluster Stability
+- Execution Time
+- Adaptability to Dynamic Data Streams
+
 ---
 
 ## How to Run
@@ -56,3 +117,10 @@ r = sqrt(SS/N - (LS/N)^2)
 ### Install dependencies
 ```bash
 pip install -r requirements.txt
+```
+
+### Run Application
+
+```bash
+python main.py
+```
